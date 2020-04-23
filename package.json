@@ -1,0 +1,40 @@
+{
+  "name": "wgsl-syntax",
+  "displayName": "WGSL Syntax",
+  "description": "Syntax highlight for WGSL files",
+  "version": "0.1.0",
+  "publisher": "PolyMeilex",
+  "engines": {
+    "vscode": "^1.29.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PolyMeilex/vscode-wgsl-syntax.git"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "icon": "icon.png",
+  "contributes": {
+    "languages": [
+      {
+        "id": "wgsl",
+        "aliases": [
+          "WGSL",
+          "wgsl"
+        ],
+        "extensions": [
+          ".wgsl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "wgsl",
+        "path": "./syntaxes/wgsl.tmLanguage.json",
+        "scopeName": "source.wgsl"
+      }
+    ]
+  }
+}
