@@ -1,8 +1,8 @@
 {
-  "name": "wgsl-syntax",
-  "displayName": "WGSL Syntax",
+  "name": "wgsl",
+  "displayName": "WGSL",
   "description": "Syntax highlight for WGSL files",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "PolyMeilex",
   "engines": {
     "vscode": "^1.29.0"
