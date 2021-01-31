@@ -110,19 +110,36 @@
       "begin": "\\b(struct)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
       "end": "(?<=\\})|;",
       "beginCaptures": {
-        "1": { "name": "storage.type.wgsl" },
-        "2": { "name": "entity.name.type.wgsl" }
+        "1": {
+          "name": "storage.type.wgsl"
+        },
+        "2": {
+          "name": "entity.name.type.wgsl"
+        }
       },
       "patterns": [
-        { "include": "#code_block" },
+        {
+          "include": "#code_block"
+        },
         {
           "comment": "Tuple struct where",
           "begin": "\\)",
           "end": "(?=;)",
-          "patterns": [{ "include": "#line_comment" }, { "include": "#types" }]
+          "patterns": [
+            {
+              "include": "#line_comment"
+            },
+            {
+              "include": "#types"
+            }
+          ]
         },
-        { "include": "#line_comment" },
-        { "include": "#types" }
+        {
+          "include": "#line_comment"
+        },
+        {
+          "include": "#types"
+        }
       ]
     },
     {
@@ -167,7 +184,7 @@
     "line_comment": {
       "comment": "Single-line comment",
       "name": "comment.line.wgsl",
-      "begin": "#",
+      "begin": "//",
       "end": "$"
     },
     "const": {

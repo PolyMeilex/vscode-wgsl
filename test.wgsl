@@ -2,7 +2,7 @@ type foo = struct {
   a : i32;
   b : vec2<f32>;
 }
-
+// this is a comment
 fn main(a: f32) -> void{
     var x : f32 = 1.0;
     var y : vec2<f32> = 1.0;
