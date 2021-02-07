@@ -34,12 +34,7 @@
     {
       "comment": "Keyword",
       "name": "keyword.other.wgsl",
-      "match": "\\b(var|as|binding|block|break|builtin|case|cast|compute|continue|continuing|if|default|else|elseif|entry_point|fallthrough|fragment|function|image|image|in|kill|location|loop|nop|offset|out|premerge|private|return|set|storage_buffer|switch|uniform|uniform_constant|unlsess|vertex|workgroup)\\b"
-    },
-    {
-      "comment": "Reserved keyword",
-      "name": "invalid.deprecated.wgsl",
-      "match": "\\b(f64,let,using)\\b"
+      "match": "\\b(var|as|binding|stage|block|break|builtin|case|cast|compute|continue|continuing|if|default|else|elseif|entry_point|fallthrough|image|image|in|kill|location|loop|nop|offset|out|premerge|private|return|set|storage_buffer|switch|uniform|uniform_constant|unlsess|workgroup)\\b"
     },
     {
       "include": "#const"
@@ -62,7 +57,7 @@
     {
       "comment": "Comparison operator (second group because of regex precedence)",
       "name": "keyword.operator.comparison.wgsl",
-      "match": "(<=|>=|<|>)"
+      "match": "( <= | >= | < | > )"
     },
     {
       "include": "#types"
@@ -220,11 +215,11 @@
     "scalar_types": {
       "comment": "Scalar Types",
       "name": "storage.type.wgsl",
-      "match": "\\b(bool|i32|u32|f32)\\b"
+      "match": "\\b(bool|i32|u32|f32|f64)\\b"
     },
     "other_types": {
       "comment": "Core trait (marker)",
-      "name": "storage.class.wgsl",
+      "name": "entity.name.wgsl",
       "match": "\\b(vec[2-4]|mat[2-4]x[2-4]|array|ptr)\\b"
     },
     "type": {
@@ -239,40 +234,7 @@
       "end": "(?<![-])>",
       "patterns": [
         {
-          "include": "#block_comment"
-        },
-        {
           "include": "#line_comment"
-        },
-        {
-          "include": "#sigils"
-        },
-        {
-          "include": "#mut"
-        },
-        {
-          "include": "#dyn"
-        },
-        {
-          "include": "#impl"
-        },
-        {
-          "include": "#lifetime"
-        },
-        {
-          "include": "#core_types"
-        },
-        {
-          "include": "#core_marker"
-        },
-        {
-          "include": "#core_traits"
-        },
-        {
-          "include": "#std_types"
-        },
-        {
-          "include": "#std_traits"
         },
         {
           "include": "#type_params"
