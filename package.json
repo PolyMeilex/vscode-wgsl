@@ -2,14 +2,14 @@
   "name": "wgsl",
   "displayName": "WGSL",
   "description": "Syntax highlight for WGSL files",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "PolyMeilex",
   "engines": {
     "vscode": "^1.29.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PolyMeilex/vscode-wgsl-syntax.git"
+    "url": "https://github.com/PolyMeilex/vscode-wgsl.git"
   },
   "categories": [
     "Programming Languages"
