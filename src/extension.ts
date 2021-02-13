@@ -2,58 +2,58 @@ import * as vscode from "vscode";
 import * as hasbin from "hasbin";
 
 import { Validator } from "./validator";
+import { WgslDocumentSymbolProvider } from "./symbol_provider";
+import { O_TRUNC } from "constants";
 
-class ParseIterator {
-  line: string[];
+class WgslCompletionItemProvider<
+  T extends vscode.CompletionItem = vscode.CompletionItem
+> implements vscode.CompletionItemProvider {
+  validator: Validator;
+  items: vscode.CompletionItem[];
 
-  constructor(line: string[]) {
-    this.line = line;
+  constructor(v: Validator) {
+    this.validator = v;
+    this.items = [];
   }
 
-  next(): string | undefined {
-    return this.line.shift();
-  }
-}
-
-class WgslDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
-  public provideDocumentSymbols(
+  provideCompletionItems(
     document: vscode.TextDocument,
-    _token: vscode.CancellationToken
-  ): Promise<vscode.DocumentSymbol[]> {
-    return new Promise((resolve, reject) => {
-      const symbols: vscode.DocumentSymbol[] = [];
-      for (var i = 0; i < document.lineCount; i++) {
-        const line = document.lineAt(i);
-        let text = line.text.trim();
+    _position: vscode.Position,
+    _token: vscode.CancellationToken,
+    context: vscode.CompletionContext
+  ): vscode.ProviderResult<any[] | vscode.CompletionList<T>> {
+    return new Promise((res, rej) => {
+      if (document.languageId == "wgsl") {
+        this.validator.getFileTree(document, (json) => {
+          const out: vscode.CompletionItem[] = [];
 
-        let sections = text.split(" ");
+          if (json && json.result) {
+            json.result.functions.map((f) => {
+              const c = new vscode.CompletionItem(f);
+              c.kind = vscode.CompletionItemKind.Function;
+              out.push(c);
+            });
 
-        let iter = new ParseIterator(sections);
+            json.result.global_variables.map((v) => {
+              const c = new vscode.CompletionItem(v);
+              c.kind = vscode.CompletionItemKind.Variable;
+              out.push(c);
+            });
 
-        let isFn = false;
-        for (let n = iter.next(); n != undefined; n = iter.next()) {
-          if (n == "fn") {
-            isFn = true;
-            break;
+            json.result.types.map((t) => {
+              const c = new vscode.CompletionItem(t);
+              c.kind = vscode.CompletionItemKind.Class;
+              out.push(c);
+            });
+
+            this.items = out;
           }
-        }
 
-        if (isFn) {
-          let fn = iter.next();
-
-          if (fn) {
-            let symbol = new vscode.DocumentSymbol(
-              fn.split("(")[0],
-              "",
-              vscode.SymbolKind.Function,
-              line.range,
-              line.range
-            );
-            symbols.push(symbol);
-          }
-        }
+          res(this.items);
+        });
+      } else {
+        rej();
       }
-      resolve(symbols);
     });
   }
 }
@@ -72,9 +72,17 @@ export function activate(context: vscode.ExtensionContext) {
       const validator = new Validator(res);
       context.subscriptions.push(vscode.Disposable.from(validator));
 
-      let diagCol = vscode.languages.createDiagnosticCollection();
-
+      const diagCol = vscode.languages.createDiagnosticCollection();
       const config = vscode.workspace.getConfiguration();
+
+      if (config.get("wgsl.autocompleate") == true) {
+        context.subscriptions.push(
+          vscode.languages.registerCompletionItemProvider(
+            "wgsl",
+            new WgslCompletionItemProvider(validator)
+          )
+        );
+      }
 
       context.subscriptions.push(
         vscode.workspace.onDidOpenTextDocument((doc) => {
@@ -114,6 +122,14 @@ export function activate(context: vscode.ExtensionContext) {
   });
 }
 
+function getTree(validator: Validator, document: vscode.TextDocument) {
+  if (document.languageId == "wgsl") {
+    validator.getFileTree(document, (json) => {
+      console.log(json);
+    });
+  }
+}
+
 function lint(
   validator: Validator,
   document: vscode.TextDocument,
@@ -124,56 +140,57 @@ function lint(
       if (document != null) {
         diagCol.delete(document.uri);
 
-        if (json.result != "Ok" && typeof json.result != "string") {
-          if (json.result.ParserErr) {
-            let err = json.result.ParserErr;
+        if (!json) return;
 
-            let diagnostics: vscode.Diagnostic[] = [];
-            let start = new vscode.Position(err.line - 1, err.pos);
-            let end = new vscode.Position(err.line - 1, err.pos);
-            let diagnostic: vscode.Diagnostic = {
-              severity: vscode.DiagnosticSeverity.Error,
-              range: new vscode.Range(start, end),
-              message: err.error,
-              source: "cargo-wgsl",
-            };
+        if (json.result.Ok) {
+        } else if (json.result.ParserErr) {
+          let err = json.result.ParserErr;
 
-            diagnostics.push(diagnostic);
+          let diagnostics: vscode.Diagnostic[] = [];
+          let start = new vscode.Position(err.line - 1, err.pos);
+          let end = new vscode.Position(err.line - 1, err.pos);
+          let diagnostic: vscode.Diagnostic = {
+            severity: vscode.DiagnosticSeverity.Error,
+            range: new vscode.Range(start, end),
+            message: err.error,
+            source: "cargo-wgsl",
+          };
 
-            diagCol.set(document.uri, diagnostics);
-          } else if (json.result.ValidationErr) {
-            let err = json.result.ValidationErr;
+          diagnostics.push(diagnostic);
 
-            let diagnostics: vscode.Diagnostic[] = [];
-            let start = new vscode.Position(0, 0);
-            let end = new vscode.Position(document.lineCount - 1, 0);
+          diagCol.set(document.uri, diagnostics);
+        } else if (json.result.ValidationErr) {
+          let err = json.result.ValidationErr;
 
-            let diagnostic: vscode.Diagnostic = {
-              severity: vscode.DiagnosticSeverity.Error,
-              range: new vscode.Range(start, end),
-              message: `${err.message}\n\n${err.debug}`,
-              source: "cargo-wgsl",
-            };
+          let diagnostics: vscode.Diagnostic[] = [];
+          let start = new vscode.Position(0, 0);
+          let end = new vscode.Position(document.lineCount - 1, 0);
 
-            diagnostics.push(diagnostic);
+          let diagnostic: vscode.Diagnostic = {
+            severity: vscode.DiagnosticSeverity.Error,
+            range: new vscode.Range(start, end),
+            message: `${err.message}\n\n${err.debug}`,
+            source: "cargo-wgsl",
+          };
 
-            diagCol.set(document.uri, diagnostics);
-          } else if (json.result.UnknownError) {
-            let diagnostics: vscode.Diagnostic[] = [];
-            let start = new vscode.Position(0, 0);
-            let end = new vscode.Position(document.lineCount - 1, 0);
+          diagnostics.push(diagnostic);
 
-            let diagnostic: vscode.Diagnostic = {
-              severity: vscode.DiagnosticSeverity.Error,
-              range: new vscode.Range(start, end),
-              message: json.result.UnknownError,
-              source: "cargo-wgsl",
-            };
+          diagCol.set(document.uri, diagnostics);
+        } else if (json.result.UnknownError) {
+          let diagnostics: vscode.Diagnostic[] = [];
+          let start = new vscode.Position(0, 0);
+          let end = new vscode.Position(document.lineCount - 1, 0);
 
-            diagnostics.push(diagnostic);
+          let diagnostic: vscode.Diagnostic = {
+            severity: vscode.DiagnosticSeverity.Error,
+            range: new vscode.Range(start, end),
+            message: json.result.UnknownError,
+            source: "cargo-wgsl",
+          };
 
-            diagCol.set(document.uri, diagnostics);
-          }
+          diagnostics.push(diagnostic);
+
+          diagCol.set(document.uri, diagnostics);
         }
       }
     });

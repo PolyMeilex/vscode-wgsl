@@ -49,6 +49,16 @@
     ],
     "configuration": [
       {
+        "title": "Autocomplete wgsl",
+        "type": "object",
+        "properties": {
+          "wgsl.autocompleate": {
+            "type": "bool",
+            "default": true
+          }
+        }
+      },
+      {
         "title": "Validate wgsl on file change",
         "type": "object",
         "properties": {

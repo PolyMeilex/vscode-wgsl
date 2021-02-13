@@ -2,11 +2,17 @@ import * as vscode from "vscode";
 
 import * as cp from "child_process";
 
-import { RPCResponse, RPCValidateFileRequest } from "./rpc";
+import {
+  RPCGetFileTreeRequest,
+  RPCGetFileTreeResponse,
+  RPCResponse,
+  RPCValidateFileRequest,
+  RPCValidationResponse,
+} from "./rpc";
 
 export class Validator {
   server: cp.ChildProcessWithoutNullStreams;
-  callbacks: { [key: number]: (data: RPCResponse) => void };
+  callbacks: { [key: number]: (data: RPCResponse<any> | null) => void };
   currId: number = 1;
 
   constructor(bin: string) {
@@ -22,17 +28,20 @@ export class Validator {
 
       msgs.forEach((msgString) => {
         try {
-          let msg: RPCResponse = JSON.parse(msgString);
+          let msg: RPCResponse<any> = JSON.parse(msgString);
 
           if (msg) {
             if (msg.jsonrpc === "2.0" && typeof msg.id === "number") {
-              if (msg.result != null) {
-                let cb = this.callbacks[msg.id];
-                if (cb) {
+              let cb = this.callbacks[msg.id];
+              if (cb) {
+                if ((msg as any).error) {
+                  vscode.window.showErrorMessage(
+                    `${JSON.stringify(msg, null, "\t")}`
+                  );
+                  cb(null);
+                } else {
                   cb(msg);
-                  delete this.callbacks[msg.id];
                 }
-              } else {
                 delete this.callbacks[msg.id];
               }
             }
@@ -67,10 +76,37 @@ export class Validator {
     this.currId += 1;
   }
 
-  validateFile(document: vscode.TextDocument, cb: (data: RPCResponse) => void) {
-    this.callbacks[this.currId] = cb;
-
+  getFileTree(
+    document: vscode.TextDocument,
+    cb: (data: RPCResponse<RPCGetFileTreeResponse | null> | null) => void
+  ) {
     if (document.uri.scheme == "file") {
+      this.callbacks[this.currId] = cb;
+
+      console.log(document.uri.fsPath);
+
+      const req: RPCGetFileTreeRequest = {
+        jsonrpc: "2.0",
+        method: "get_file_tree",
+        params: {
+          path: document.uri.fsPath,
+        },
+        id: this.currId,
+      };
+
+      this.server.stdin.write(JSON.stringify(req) + "\n");
+
+      this.currId += 1;
+    }
+  }
+
+  validateFile(
+    document: vscode.TextDocument,
+    cb: (data: RPCResponse<RPCValidationResponse> | null) => void
+  ) {
+    if (document.uri.scheme == "file") {
+      this.callbacks[this.currId] = cb;
+
       const req: RPCValidateFileRequest = {
         jsonrpc: "2.0",
         method: "validate_file",

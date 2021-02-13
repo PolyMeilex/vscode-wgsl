@@ -12,16 +12,23 @@ export interface RPCValidationErr {
 
 export type RPCUnknownError = string;
 
-export interface RPCResponse {
+export interface RPCResponse<T> {
   jsonrpc: string;
-  result:
-    | "Ok"
-    | {
-        ParserErr: RPCParserErr;
-        ValidationErr: RPCValidationErr;
-        UnknownError: RPCUnknownError;
-      };
+  result: T;
   id: number;
+}
+
+export interface RPCValidationResponse {
+  Ok?: true;
+  ParserErr?: RPCParserErr;
+  ValidationErr?: RPCValidationErr;
+  UnknownError?: RPCUnknownError;
+}
+
+export interface RPCGetFileTreeResponse {
+  types: string[];
+  global_variables: string[];
+  functions: string[];
 }
 
 //
@@ -37,6 +44,13 @@ export interface RPCRequest {
 
 export interface RPCValidateFileRequest extends RPCRequest {
   method: "validate_file";
+  params: {
+    path: string;
+  };
+}
+
+export interface RPCGetFileTreeRequest extends RPCRequest {
+  method: "get_file_tree";
   params: {
     path: string;
   };
