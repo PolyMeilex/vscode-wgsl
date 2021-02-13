@@ -59,12 +59,10 @@ function lint(
 ) {
   if (document.languageId == "wgsl") {
     validator.validateFile(document, (json) => {
-      console.log(json);
-
       if (document != null) {
         diagCol.delete(document.uri);
 
-        if (json.result != "Ok") {
+        if (json.result != "Ok" && typeof json.result != "string") {
           if (json.result.ParserErr) {
             let err = json.result.ParserErr;
 

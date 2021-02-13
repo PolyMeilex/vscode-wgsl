@@ -42,12 +42,33 @@ export class Validator {
         }
       });
     });
+
+    this.versionCheck();
+  }
+
+  versionCheck() {
+    this.callbacks[this.currId] = (res: any) => {
+      if (res.result != "0.0.1") {
+        vscode.window.showErrorMessage(
+          `It looks like your cargo-wgsl is outdated. Please run "cargo install cargo-wgsl"`
+        );
+      }
+    };
+
+    const req = {
+      jsonrpc: "2.0",
+      method: "version",
+      params: {},
+      id: this.currId,
+    };
+
+    this.server.stdin.write(JSON.stringify(req) + "\n");
+
+    this.currId += 1;
   }
 
   validateFile(document: vscode.TextDocument, cb: (data: RPCResponse) => void) {
     this.callbacks[this.currId] = cb;
-
-    console.log();
 
     if (document.uri.scheme == "file") {
       const req: RPCValidateFileRequest = {
