@@ -3,24 +3,23 @@ import * as hasbin from "hasbin";
 
 import { Validator } from "./validator";
 import { WgslDocumentSymbolProvider } from "./symbol_provider";
-import { O_TRUNC } from "constants";
 
 class WgslCompletionItemProvider<
   T extends vscode.CompletionItem = vscode.CompletionItem
 > implements vscode.CompletionItemProvider {
   validator: Validator;
-  items: vscode.CompletionItem[];
+  items: { [key: string]: vscode.CompletionItem[] };
 
   constructor(v: Validator) {
     this.validator = v;
-    this.items = [];
+    this.items = {};
   }
 
   provideCompletionItems(
     document: vscode.TextDocument,
     _position: vscode.Position,
     _token: vscode.CancellationToken,
-    context: vscode.CompletionContext
+    _context: vscode.CompletionContext
   ): vscode.ProviderResult<any[] | vscode.CompletionList<T>> {
     return new Promise((res, rej) => {
       if (document.languageId == "wgsl") {
@@ -46,10 +45,10 @@ class WgslCompletionItemProvider<
               out.push(c);
             });
 
-            this.items = out;
+            this.items[document.uri.toString()] = out;
           }
 
-          res(this.items);
+          res(this.items[document.uri.toString()]);
         });
       } else {
         rej();
@@ -120,14 +119,6 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   });
-}
-
-function getTree(validator: Validator, document: vscode.TextDocument) {
-  if (document.languageId == "wgsl") {
-    validator.getFileTree(document, (json) => {
-      console.log(json);
-    });
-  }
 }
 
 function lint(
