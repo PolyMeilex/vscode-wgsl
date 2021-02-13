@@ -66,8 +66,7 @@ function lint(
 
         if (json.result != "Ok") {
           if (json.result.ParserErr) {
-            let err: { error: string; line: number; pos: number } =
-              json.result.ParserErr;
+            let err = json.result.ParserErr;
 
             let diagnostics: vscode.Diagnostic[] = [];
             let start = new vscode.Position(err.line - 1, err.pos);
@@ -76,6 +75,38 @@ function lint(
               severity: vscode.DiagnosticSeverity.Error,
               range: new vscode.Range(start, end),
               message: err.error,
+              source: "cargo-wgsl",
+            };
+
+            diagnostics.push(diagnostic);
+
+            diagCol.set(document.uri, diagnostics);
+          } else if (json.result.ValidationErr) {
+            let err = json.result.ValidationErr;
+
+            let diagnostics: vscode.Diagnostic[] = [];
+            let start = new vscode.Position(0, 0);
+            let end = new vscode.Position(document.lineCount - 1, 0);
+
+            let diagnostic: vscode.Diagnostic = {
+              severity: vscode.DiagnosticSeverity.Error,
+              range: new vscode.Range(start, end),
+              message: `${err.message}\n\n${err.debug}`,
+              source: "cargo-wgsl",
+            };
+
+            diagnostics.push(diagnostic);
+
+            diagCol.set(document.uri, diagnostics);
+          } else if (json.result.UnknownError) {
+            let diagnostics: vscode.Diagnostic[] = [];
+            let start = new vscode.Position(0, 0);
+            let end = new vscode.Position(document.lineCount - 1, 0);
+
+            let diagnostic: vscode.Diagnostic = {
+              severity: vscode.DiagnosticSeverity.Error,
+              range: new vscode.Range(start, end),
+              message: json.result.UnknownError,
               source: "cargo-wgsl",
             };
 

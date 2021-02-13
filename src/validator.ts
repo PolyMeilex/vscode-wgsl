@@ -2,11 +2,7 @@ import * as vscode from "vscode";
 
 import * as cp from "child_process";
 
-interface RPCResponse {
-  jsonrpc: string;
-  result: any;
-  id: number;
-}
+import { RPCResponse, RPCValidateFileRequest } from "./rpc";
 
 export class Validator {
   server: cp.ChildProcessWithoutNullStreams;
@@ -51,18 +47,22 @@ export class Validator {
   validateFile(document: vscode.TextDocument, cb: (data: RPCResponse) => void) {
     this.callbacks[this.currId] = cb;
 
-    const req = {
-      jsonrpc: "2.0",
-      method: "validate_file",
-      params: {
-        path: document.fileName,
-      },
-      id: this.currId,
-    };
+    console.log();
 
-    this.server.stdin.write(JSON.stringify(req) + "\n");
+    if (document.uri.scheme == "file") {
+      const req: RPCValidateFileRequest = {
+        jsonrpc: "2.0",
+        method: "validate_file",
+        params: {
+          path: document.uri.fsPath,
+        },
+        id: this.currId,
+      };
 
-    this.currId += 1;
+      this.server.stdin.write(JSON.stringify(req) + "\n");
+
+      this.currId += 1;
+    }
   }
 
   dispose() {
