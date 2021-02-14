@@ -2,7 +2,7 @@
   "name": "wgsl",
   "displayName": "WGSL",
   "description": "Syntax highlight for WGSL files",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "PolyMeilex",
   "engines": {
     "vscode": "^1.52.0"
@@ -47,38 +47,26 @@
         "scopeName": "source.wgsl"
       }
     ],
-    "configuration": [
-      {
-        "title": "Autocomplete wgsl",
-        "type": "object",
-        "properties": {
-          "wgsl.autocompleate": {
-            "type": "bool",
-            "default": true
-          }
-        }
-      },
-      {
-        "title": "Validate wgsl on file change",
-        "type": "object",
-        "properties": {
-          "wgsl.validateOnType": {
-            "type": "bool",
-            "default": false
-          }
-        }
-      },
-      {
-        "title": "Validate wgsl on file save",
-        "type": "object",
-        "properties": {
-          "wgsl.validateOnSave": {
-            "type": "bool",
-            "default": true
-          }
+    "configuration": {
+      "title": "wgsl",
+      "properties": {
+        "wgsl.autocompleate": {
+          "description": "Autocomplete wgsl",
+          "type": "boolean",
+          "default": true
+        },
+        "wgsl.validateOnType": {
+          "description": "Validate wgsl on file change",
+          "type": "boolean",
+          "default": false
+        },
+        "wgsl.validateOnSave": {
+          "description": "Validate wgsl on file save",
+          "type": "boolean",
+          "default": true
         }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
