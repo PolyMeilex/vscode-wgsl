@@ -2,7 +2,7 @@
   "name": "wgsl",
   "displayName": "WGSL",
   "description": "Syntax highlight for WGSL files",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "publisher": "PolyMeilex",
   "engines": {
     "vscode": "^1.52.0"
