@@ -34,7 +34,7 @@
     {
       "comment": "Keyword",
       "name": "keyword.other.wgsl",
-      "match": "\\b(var|as|binding|group|stage|block|break|builtin|case|cast|compute|continue|continuing|if|default|else|elseif|entry_point|fallthrough|location|loop|premerge|private|return|switch|uniform|uniform_constant|unlsess|workgroup)\\b"
+      "match": "\\b(var|let|as|binding|group|stage|block|break|builtin|case|cast|compute|continue|continuing|if|default|else|elseif|entry_point|fallthrough|location|loop|premerge|private|return|switch|uniform|uniform_constant|unlsess|workgroup)\\b"
     },
     {
       "include": "#const"
