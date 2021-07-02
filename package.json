@@ -4,6 +4,7 @@
   "description": "Syntax highlight for WGSL files",
   "version": "0.1.9",
   "publisher": "PolyMeilex",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.52.0"
   },
