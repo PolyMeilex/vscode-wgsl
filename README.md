@@ -1,6 +1,6 @@
 # WGSL Syntax Highlight For Visual Studio Code
 
-![img](https://i.imgur.com/bWfZSj9.png)
+![img](https://i.imgur.com/7Z2Rt7s.png)
 
 # For rust users:
 
