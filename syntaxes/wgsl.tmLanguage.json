@@ -6,6 +6,9 @@
             "include": "#line_comments"
         },
         {
+            "include": "#keywords"
+        },
+        {
             "include": "#functions"
         },
         {
@@ -13,9 +16,6 @@
         },
         {
             "include": "#constants"
-        },
-        {
-            "include": "#keywords"
         },
         {
             "include": "#types"
@@ -61,13 +61,13 @@
                             "include": "#line_comments"
                         },
                         {
+                            "include": "#keywords"
+                        },
+                        {
                             "include": "#function_calls"
                         },
                         {
                             "include": "#constants"
-                        },
-                        {
-                            "include": "#keywords"
                         },
                         {
                             "include": "#types"
@@ -107,13 +107,13 @@
                             "include": "#line_comments"
                         },
                         {
+                            "include": "#keywords"
+                        },
+                        {
                             "include": "#function_calls"
                         },
                         {
                             "include": "#constants"
-                        },
-                        {
-                            "include": "#keywords"
                         },
                         {
                             "include": "#types"

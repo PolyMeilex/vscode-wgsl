@@ -2,10 +2,10 @@ name: WGSL
 scopeName: source.wgsl
 patterns:
   - include: "#line_comments"
+  - include: "#keywords"
   - include: "#functions"
   - include: "#function_calls"
   - include: "#constants"
-  - include: "#keywords"
   - include: "#types"
   - include: "#variables"
   - include: "#punctuation"
@@ -33,9 +33,9 @@ repository:
             name: punctuation.brackets.curly.wgsl
         patterns:
           - include: "#line_comments"
+          - include: "#keywords"
           - include: "#function_calls"
           - include: "#constants"
-          - include: "#keywords"
           - include: "#types"
           - include: "#variables"
           - include: "#punctuation"
@@ -56,9 +56,9 @@ repository:
             name: punctuation.brackets.round.wgsl
         patterns:
           - include: "#line_comments"
+          - include: "#keywords"
           - include: "#function_calls"
           - include: "#constants"
-          - include: "#keywords"
           - include: "#types"
           - include: "#variables"
           - include: "#punctuation"
