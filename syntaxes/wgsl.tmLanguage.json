@@ -96,40 +96,15 @@
     },
     {
       "comment": "Struct type declaration",
-      "begin": "\\b(struct)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "end": "(?<=\\})|;",
-      "beginCaptures": {
+      "match": "\\b(struct)\\s+([A-Z][A-Za-z0-9]*)\\b",
+      "captures": {
         "1": {
           "name": "storage.type.wgsl"
         },
         "2": {
-          "name": "entity.name.type.wgsl"
+          "name": "entity.name.type.struct.wgsl"
         }
-      },
-      "patterns": [
-        {
-          "include": "#code_block"
-        },
-        {
-          "comment": "Tuple struct where",
-          "begin": "\\)",
-          "end": "(?=;)",
-          "patterns": [
-            {
-              "include": "#line_comment"
-            },
-            {
-              "include": "#types"
-            }
-          ]
-        },
-        {
-          "include": "#line_comment"
-        },
-        {
-          "include": "#types"
-        }
-      ]
+      }
     },
     {
       "comment": "Type alias",
@@ -196,11 +171,6 @@
         },
         {
           "include": "#custom_types"
-        },
-        {
-          "comment": "Void Types",
-          "name": "storage.type.wgsl",
-          "match": "\\b(struct)\\b"
         }
       ]
     },
@@ -221,7 +191,7 @@
     },
     "custom_types": {
       "comment": "A type",
-      "name": "storage.type.wgsl",
+      "name": "entity.name.type.rust",
       "match": "\\b([A-Z][A-Za-z0-9]*)\\b"
     },
     "type_params": {
