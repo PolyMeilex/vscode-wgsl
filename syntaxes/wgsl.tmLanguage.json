@@ -85,13 +85,7 @@
       },
       "patterns": [
         {
-          "include": "#line_comment"
-        },
-        {
-          "include": "#types"
-        },
-        {
-          "include": "#type_params"
+          "include": "#code_block"
         },
         {
           "comment": "Function arguments",
@@ -201,6 +195,9 @@
           "include": "#other_types"
         },
         {
+          "include": "#custom_types"
+        },
+        {
           "comment": "Void Types",
           "name": "storage.type.wgsl",
           "match": "\\b(struct)\\b"
@@ -222,10 +219,10 @@
       "name": "storage.type.wgsl",
       "match": "\\b(vec[2-4]|mat[2-4]x[2-4]|array|ptr)\\b"
     },
-    "type": {
+    "custom_types": {
       "comment": "A type",
-      "name": "entity.name.type.wgsl",
-      "match": "\\b([A-Za-z\\x80-\\xFF][_A-Za-z0-9\\x80-\\xFF]*|_[_A-Za-z0-9\\x80-\\xFF]+)\\b"
+      "name": "storage.type.wgsl",
+      "match": "\\b([A-Z][A-Za-z0-9]*)\\b"
     },
     "type_params": {
       "comment": "Type parameters",
