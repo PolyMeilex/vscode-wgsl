@@ -2,7 +2,7 @@
   "name": "wgsl",
   "displayName": "WGSL",
   "description": "Syntax highlight for WGSL files",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "publisher": "PolyMeilex",
   "license": "MIT",
   "engines": {
