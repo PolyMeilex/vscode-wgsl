@@ -218,8 +218,8 @@
       "match": "\\b(bool|i32|u32|f32|f64)\\b"
     },
     "other_types": {
-      "comment": "Core trait (marker)",
-      "name": "entity.name.wgsl",
+      "comment": "Vector/Matrix Types",
+      "name": "storage.type.wgsl",
       "match": "\\b(vec[2-4]|mat[2-4]x[2-4]|array|ptr)\\b"
     },
     "type": {
