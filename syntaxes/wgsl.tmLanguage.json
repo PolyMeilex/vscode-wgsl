@@ -9,6 +9,9 @@
             "include": "#keywords"
         },
         {
+            "include": "#attributes"
+        },
+        {
             "include": "#functions"
         },
         {
@@ -32,6 +35,23 @@
             "comment": "single line comment",
             "name": "comment.line.double-slash.wgsl",
             "match": "\\s*//.*"
+        },
+        "attributes": {
+            "patterns": [
+                {
+                    "comment": "attribute declaration",
+                    "name": "meta.attribute.wgsl",
+                    "match": "(@)([A-Za-z_]+)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.attribute.at"
+                        },
+                        "2": {
+                            "name": "entity.name.attribute.wgsl"
+                        }
+                        }
+                }
+            ]
         },
         "functions": {
             "patterns": [
@@ -62,6 +82,9 @@
                         },
                         {
                             "include": "#keywords"
+                        },
+                        {
+                            "include": "#attributes"
                         },
                         {
                             "include": "#function_calls"
@@ -108,6 +131,9 @@
                         },
                         {
                             "include": "#keywords"
+                        },
+                        {
+                            "include": "#attributes"
                         },
                         {
                             "include": "#function_calls"

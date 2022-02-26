@@ -1,33 +1,32 @@
-[[block]]
 struct ViewUniform {
     transform: mat4x4<f32>;
     size: vec2<f32>;
 };
 
-[[group(0), binding(0)]]
+@group(0) @binding(0)
 var<uniform> view_uniform: ViewUniform;
 
 struct Vertex {
-    [[location(0)]] position: vec2<f32>;
+    @location(0) position: vec2<f32>;
 };
 
 struct QuadInstance{
-    [[location(1)]] position: vec2<f32>;
-    [[location(2)]] size: vec2<f32>;
-    [[location(3)]] color: vec4<f32>;
-    [[location(4)]] border_radius: vec4<f32>;
+    @location(1) position: vec2<f32>;
+    @location(2) size: vec2<f32>;
+    @location(3) color: vec4<f32>;
+    @location(4) border_radius: vec4<f32>;
 };
 
 struct VertexOutput {
-    [[builtin(position)]] position: vec4<f32>;
-    [[location(0)]] src_position: vec2<f32>;
+    @builtin(position) position: vec4<f32>;
+    @location(0) src_position: vec2<f32>;
 
-    [[location(1)]] quad_size: vec2<f32>;
-    [[location(2)]] quad_color: vec4<f32>;
-    [[location(3)]] quad_border_radius: vec4<f32>;
+    @location(1) quad_size: vec2<f32>;
+    @location(2) quad_color: vec4<f32>;
+    @location(3) quad_border_radius: vec4<f32>;
 };
 
-[[stage(vertex)]]
+@stage(vertex)
 fn vs_main(vertex: Vertex, quad: QuadInstance) -> VertexOutput {
     var i_transform: mat4x4<f32> = mat4x4<f32>(
         vec4<f32>(quad.size.x, 0.0, 0.0, 0.0),
@@ -82,8 +81,8 @@ fn fragment_alpha(
 }
 
 
-[[stage(fragment)]]
-fn fs_main(in: VertexOutput) ->  [[location(0)]] vec4<f32> {
+@stage(fragment)
+fn fs_main(in: VertexOutput) ->  @location(0) vec4<f32> {
     let alpha: f32 = fragment_alpha(
         in.src_position.xy,
         in.quad_size,
