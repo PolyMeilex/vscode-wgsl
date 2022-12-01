@@ -2,6 +2,7 @@ name: WGSL
 scopeName: source.wgsl
 patterns:
   - include: "#line_comments"
+  - include: '#block_comments'
   - include: "#keywords"
   - include: "#attributes"
   - include: "#functions"
@@ -15,6 +16,27 @@ repository:
     comment: single line comment
     name: comment.line.double-slash.wgsl
     match: \s*//.*
+
+  block_comments:
+    patterns:
+      -
+        comment: empty block comments
+        name: comment.block.wgsl
+        match: /\*\*/
+      -
+        comment: block documentation comments
+        name: comment.block.documentation.wgsl
+        begin: /\*\*
+        end: \*/
+        patterns:
+          - include: '#block_comments'
+      -
+        comment: block comments
+        name: comment.block.wgsl
+        begin: /\*(?!\*)
+        end: \*/
+        patterns:
+          - include: '#block_comments'
 
   attributes:
     patterns:
@@ -45,6 +67,7 @@ repository:
             name: punctuation.brackets.curly.wgsl
         patterns:
           - include: "#line_comments"
+          - include: '#block_comments'
           - include: "#keywords"
           - include: "#attributes"
           - include: "#function_calls"
@@ -69,6 +92,7 @@ repository:
             name: punctuation.brackets.round.wgsl
         patterns:
           - include: "#line_comments"
+          - include: '#block_comments'
           - include: "#keywords"
           - include: "#attributes"
           - include: "#function_calls"
