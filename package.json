@@ -86,7 +86,7 @@
     "@types/hasbin": "^1.2.0",
     "@types/mocha": "^8.0.4",
     "@types/node": "^12.20.55",
-    "@types/vscode": "^1.73.1",
+    "@types/vscode": "^1.52.0",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "eslint": "^7.15.0",
