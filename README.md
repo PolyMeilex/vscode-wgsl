@@ -2,6 +2,10 @@
 
 ![img](https://i.imgur.com/7Z2Rt7s.png)
 
+# Install 
+- [vscode marketplace](https://marketplace.visualstudio.com/items?itemName=PolyMeilex.wgsl)
+- [open vsx registry](https://open-vsx.org/extension/PolyMeilex/wgsl)
+
 # For rust users:
 
 I also created [cargo-wgsl](https://github.com/PolyMeilex/cargo-wgsl) crate that validates your shaders.
